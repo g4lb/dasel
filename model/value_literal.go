@@ -37,7 +37,7 @@ func NewStringValue(x string) *Value {
 
 // IsString returns true if the value is a string.
 func (v *Value) IsString() bool {
-	return v.UnpackKinds(reflect.Pointer, reflect.Interface).isString()
+	return v.unpackKindsValue(reflect.Pointer, reflect.Interface).Kind() == reflect.String
 }
 
 func (v *Value) isString() bool {
@@ -109,7 +109,7 @@ func NewIntValue(x int64) *Value {
 
 // IsInt returns true if the value is an int.
 func (v *Value) IsInt() bool {
-	return v.UnpackKinds(reflect.Pointer, reflect.Interface).isInt()
+	return slices.Contains([]reflect.Kind{reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64}, v.unpackKindsValue(reflect.Pointer, reflect.Interface).Kind())
 }
 
 func (v *Value) isInt() bool {
@@ -137,11 +137,7 @@ func NewFloatValue(x float64) *Value {
 
 // IsFloat returns true if the value is a float.
 func (v *Value) IsFloat() bool {
-	return v.UnpackKinds(reflect.Pointer, reflect.Interface).isFloat()
-}
-
-func (v *Value) isFloat() bool {
-	return slices.Contains([]reflect.Kind{reflect.Float32, reflect.Float64}, v.value.Kind())
+	return slices.Contains([]reflect.Kind{reflect.Float32, reflect.Float64}, v.unpackKindsValue(reflect.Pointer, reflect.Interface).Kind())
 }
 
 // FloatValue returns the float value of the Value.
@@ -165,11 +161,7 @@ func NewBoolValue(x bool) *Value {
 
 // IsBool returns true if the value is a bool.
 func (v *Value) IsBool() bool {
-	return v.UnpackKinds(reflect.Pointer, reflect.Interface).isBool()
-}
-
-func (v *Value) isBool() bool {
-	return v.value.Kind() == reflect.Bool
+	return v.unpackKindsValue(reflect.Pointer, reflect.Interface).Kind() == reflect.Bool
 }
 
 // BoolValue returns the bool value of the Value.

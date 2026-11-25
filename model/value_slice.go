@@ -17,7 +17,7 @@ func NewSliceValue() *Value {
 
 // IsSlice returns true if the value is a slice.
 func (v *Value) IsSlice() bool {
-	return v.UnpackKinds(reflect.Interface, reflect.Pointer).isSlice()
+	return v.unpackKindsValue(reflect.Interface, reflect.Pointer).Kind() == reflect.Slice
 }
 
 func (v *Value) isSlice() bool {

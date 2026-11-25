@@ -185,6 +185,11 @@ func (v *Value) Kind() reflect.Kind {
 
 // UnpackKinds unpacks the reflect value until it no longer matches the given kinds.
 func (v *Value) UnpackKinds(kinds ...reflect.Kind) *Value {
+	return NewValue(v.unpackKindsValue(kinds...))
+}
+
+// unpackKindsValue is UnpackKinds without the new Value, for callers that only read the result.
+func (v *Value) unpackKindsValue(kinds ...reflect.Kind) reflect.Value {
 	val := v
 	for val.isDaselValue() {
 		var err error
@@ -196,7 +201,7 @@ func (v *Value) UnpackKinds(kinds ...reflect.Kind) *Value {
 	res := val.value
 	for {
 		if !slices.Contains(kinds, res.Kind()) || res.IsNil() {
-			return NewValue(res)
+			return res
 		}
 		res = res.Elem()
 	}
